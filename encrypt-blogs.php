@@ -26,12 +26,14 @@ require_once ENCRYPT_BLOGS_PLUGIN_DIR . 'includes/class-encrypt-blogs-admin.php'
 require_once ENCRYPT_BLOGS_PLUGIN_DIR . 'includes/class-encrypt-blogs-block.php';
 require_once ENCRYPT_BLOGS_PLUGIN_DIR . 'includes/class-encrypt-blogs-encryptor.php';
 
+
 // Initialize the plugin
 function encrypt_blogs_init() {
     $plugin = new Encrypt_Blogs();
     $plugin->run();
 }
 add_action('plugins_loaded', 'encrypt_blogs_init');
+
 
 // Activation hook
 register_activation_hook(__FILE__, 'encrypt_blogs_activate');
@@ -48,11 +50,13 @@ function encrypt_blogs_activate() {
     }
 }
 
+
 // Deactivation hook
 register_deactivation_hook(__FILE__, 'encrypt_blogs_deactivate');
 function encrypt_blogs_deactivate() {
     // Cleanup if necessary
 }
+
 
 // Uninstall hook
 register_uninstall_hook(__FILE__, 'encrypt_blogs_uninstall');
