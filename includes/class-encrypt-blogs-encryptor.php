@@ -167,10 +167,10 @@ class Encrypt_Blogs_Encryptor {
         wp_delete_file($input_file);
         wp_delete_file($key_file);
 
-        if ($return_var !== 0) {
-            error_log('GPG encryption failed: ' . implode("\n", $output));
-            return false;
-        }
+//        if ($return_var !== 0) {
+//            error_log('GPG encryption failed: ' . implode("\n", $output));
+//            return false;
+//        }
 
         // Get encrypted content using WP_Filesystem
         $encrypted = $this->wp_filesystem->get_contents($output_file);
