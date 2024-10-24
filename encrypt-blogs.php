@@ -1,11 +1,11 @@
 <?php
 /**
  * Plugin Name: Encrypt Blogs
- * Plugin URI: 
+ * Plugin URI: https://github.com/bokumin/encrypt-blogs
  * Description: A plugin to encrypt blog content with time-based encryption using either PHP or GPG encryption
- * Version: 1.0.0
- * Author: 
- * Author URI: 
+ * Version: 1.0.2
+ * Author:bokumin 
+ * Author URI:https://bokumin45.server-on.net 
  * License: GPL v2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain: encrypt-blogs

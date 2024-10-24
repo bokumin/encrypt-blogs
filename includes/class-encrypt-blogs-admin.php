@@ -80,14 +80,11 @@ class Encrypt_Blogs_Admin {
 
                 <script>
                 jQuery(document).ready(function($) {
-                    // ラジオボタンの変更イベントを監視
                     $('input[name="encrypt_blogs_settings[encryption_method]"]').change(function() {
                         var selected = $(this).val();
                         
-                        // 全ての設定行を一旦非表示
                         $('.php-settings, .gpg-settings').hide();
                         
-                        // 選択された方法に応じて該当する設定行を表示
                         if (selected === 'php') {
                             $('.php-settings').show();
                         } else if (selected === 'gpg') {
