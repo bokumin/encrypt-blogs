@@ -1,9 +1,18 @@
 <?php
 class Encrypt_Blogs_Encryptor {
     private $settings;
+    private $wp_filesystem;
     
     public function init() {
         $this->settings = get_option('encrypt_blogs_settings');
+        
+        // Initialize WP_Filesystem
+        global $wp_filesystem;
+        if (empty($wp_filesystem)) {
+            require_once ABSPATH . '/wp-admin/includes/file.php';
+            WP_Filesystem();
+        }
+        $this->wp_filesystem = $wp_filesystem;
     }
 
     public function should_encrypt($attributes) {
@@ -33,11 +42,11 @@ class Encrypt_Blogs_Encryptor {
      * - Time only: "14:30"
      */
     private function parse_date_with_defaults($date_string) {
-        $current_year = date('Y');
-        $current_month = date('m');
-        $current_day = date('d');
-        $current_hour = date('H');
-        $current_minute = date('i');
+        $current_year = gmdate('Y');
+        $current_month = gmdate('m');
+        $current_day = gmdate('d');
+        $current_hour = gmdate('H');
+        $current_minute = gmdate('i');
 
         $parts = [
             'year' => $current_year,
@@ -134,12 +143,15 @@ class Encrypt_Blogs_Encryptor {
     }
 
     private function gpg_encrypt($content) {
-        // Create temporary files
-        $input_file = tempnam(sys_get_temp_dir(), 'gpg_input_');
-        file_put_contents($input_file, $content);
-        $output_file = tempnam(sys_get_temp_dir(), 'gpg_output_');
-        $key_file = tempnam(sys_get_temp_dir(), 'gpg_key_');
-        file_put_contents($key_file, $this->settings['gpg_public_key']);
+        // Create temporary files using WP_Filesystem
+        $temp_dir = get_temp_dir();
+        $input_file = $temp_dir . 'gpg_input_' . wp_generate_password(12, false);
+        $output_file = $temp_dir . 'gpg_output_' . wp_generate_password(12, false);
+        $key_file = $temp_dir . 'gpg_key_' . wp_generate_password(12, false);
+
+        // Write content to temporary files using WP_Filesystem
+        $this->wp_filesystem->put_contents($input_file, $content);
+        $this->wp_filesystem->put_contents($key_file, $this->settings['gpg_public_key']);
 
         // Import key and encrypt
         $command = sprintf(
@@ -151,17 +163,19 @@ class Encrypt_Blogs_Encryptor {
         );
         exec($command, $output, $return_var);
 
-        // Cleanup
-        unlink($input_file);
-        unlink($key_file);
+        // Cleanup temporary files
+        wp_delete_file($input_file);
+        wp_delete_file($key_file);
 
         if ($return_var !== 0) {
             error_log('GPG encryption failed: ' . implode("\n", $output));
             return false;
         }
 
-        $encrypted = file_get_contents($output_file);
-        unlink($output_file);
+        // Get encrypted content using WP_Filesystem
+        $encrypted = $this->wp_filesystem->get_contents($output_file);
+        wp_delete_file($output_file);
+
         return base64_encode($encrypted);
     }
 }
