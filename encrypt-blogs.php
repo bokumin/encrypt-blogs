@@ -3,7 +3,7 @@
  * Plugin Name: Encrypt Blogs
  * Plugin URI: https://github.com/bokumin/encrypt-blogs
  * Description: A plugin to encrypt blog content with time-based encryption using either PHP or GPG encryption
- * Version: 1.0.2
+ * Version: 1.1.0
  * Author:bokumin 
  * Author URI:https://bokumin45.server-on.net 
  * License: GPL v2 or later

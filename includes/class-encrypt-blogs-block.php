@@ -2,6 +2,7 @@
 class Encrypt_Blogs_Block {
     public function init() {
         add_action('init', array($this, 'register_block'));
+        add_action('enqueue_block_editor_assets', array($this, 'enqueue_editor_assets'));
     }
 
     public function register_block() {
@@ -9,27 +10,27 @@ class Encrypt_Blogs_Block {
             'editor_script' => 'encrypt-blogs-editor',
             'render_callback' => array($this, 'render_block')
         ));
+    }
 
-        wp_register_script(
+    public function enqueue_editor_assets() {
+        wp_enqueue_script(
             'encrypt-blogs-editor',
             ENCRYPT_BLOGS_PLUGIN_URL . 'js/blocks.js',
             array('wp-blocks', 'wp-element', 'wp-components', 'wp-block-editor'),
-            ENCRYPT_BLOGS_VERSION
+            ENCRYPT_BLOGS_VERSION,
+            true
         );
     }
 
     public function render_block($attributes, $content) {
         $encryptor = new Encrypt_Blogs_Encryptor();
         
-        // Check if encryption is needed based on time
         if (!$encryptor->should_encrypt($attributes)) {
             return $content;
         }
 
-        // Encrypt content
         $encrypted = $encryptor->encrypt($content);
 
-        // Return based on display mode
         switch ($attributes['displayMode']) {
             case 'hidden':
                 return '';
