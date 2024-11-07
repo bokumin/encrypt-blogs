@@ -96,6 +96,14 @@ Block settings panel
 Various display modes
 
 == Changelog ==
+
+= 1.1.0 =
+
+Security improvement: Replaced exec()/shell_exec() with gnupg extension
+Fixed: Proper implementation of wp_enqueue_script() and wp_add_inline_script()
+Enhanced: Added sanitization callbacks for register_setting()
+Updated: Settings fields now use proper WordPress sanitization functions
+
 = 1.0.2 =
 
 Added support for additional date/time formats
